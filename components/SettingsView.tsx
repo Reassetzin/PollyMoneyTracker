@@ -3,11 +3,10 @@ import React, { useState } from "react";
 import { Settings } from "@/lib/types";
 import { useUI, C, scroll, Header, Field, segWrap, segBtn, input, primaryBtn, ConfirmDialog } from "./ui";
 
-export default function SettingsView({ settings, onUpdate, onErase, onSignOut }: {
+export default function SettingsView({ settings, onUpdate, onErase }: {
   settings: Settings;
   onUpdate: (patch: Partial<Settings>) => void;
   onErase: () => void;
-  onSignOut: () => void;
 }) {
   const { L } = useUI();
   const [erase, setErase] = useState(false);
@@ -27,8 +26,7 @@ export default function SettingsView({ settings, onUpdate, onErase, onSignOut }:
         <Field label={L.startingCash}><input style={input} type="number" inputMode="decimal" value={settings.starting_cash} onChange={(e) => onUpdate({ starting_cash: parseFloat(e.target.value) || 0 })} /></Field>
         <Field label={L.currencySymbol}><input style={input} value={settings.currency} maxLength={3} onChange={(e) => onUpdate({ currency: e.target.value })} /></Field>
 
-        <button onClick={onSignOut} style={{ ...primaryBtn, background: C.card, color: C.ink, border: `1px solid ${C.line}`, marginTop: 8 }}>{L.signOut}</button>
-        <button onClick={() => setErase(true)} style={{ ...primaryBtn, background: C.outSoft, color: C.out, marginTop: 10 }}>{L.eraseAll}</button>
+        <button onClick={() => setErase(true)} style={{ ...primaryBtn, background: C.outSoft, color: C.out, marginTop: 20 }}>{L.eraseAll}</button>
       </div>
       <div style={{ height: 96 }} />
       {erase && <ConfirmDialog title={L.eraseConfirm} confirmLabel={L.eraseAll} danger onConfirm={() => { onErase(); setErase(false); }} onCancel={() => setErase(false)} />}

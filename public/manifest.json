@@ -2,7 +2,7 @@
   "name": "Magic Touch Finances",
   "short_name": "Magic Touch",
   "description": "Income, expenses, bills, and savings for Magic Touch.",
-  "start_url": "/dashboard",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#EFEBE3",
   "theme_color": "#1F4E3D",

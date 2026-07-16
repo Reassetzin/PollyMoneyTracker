@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
 import { Home, Plus, CalendarDays, Clock, BarChart3 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { STR } from "@/lib/i18n";
@@ -18,7 +17,6 @@ type Tab = "home" | "reports" | "add" | "bills" | "goals" | "history" | "setting
 
 export default function App() {
   const supabase = createClient();
-  const router = useRouter();
   const [tab, setTab] = useState<Tab>("home");
   const [ready, setReady] = useState(false);
   const [settings, setSettings] = useState<Settings>({ business_name: "Magic Touch", starting_balance: 0, starting_cash: 0, currency: "$", lang: "en" });
@@ -138,11 +136,6 @@ export default function App() {
     await supabase.from("settings").update(reset).eq("id", 1);
     setTransactions([]); setBills([]); setGoals([]); setSettings(reset);
   }
-  async function signOut() {
-    await supabase.auth.signOut();
-    router.push("/login");
-    router.refresh();
-  }
 
   if (!ready)
     return <div style={{ minHeight: "100vh", background: "#DCD6CB", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: SANS, color: C.muted }}>Loading…</div>;
@@ -158,7 +151,7 @@ export default function App() {
             {tab === "bills" && <BillsView bills={bills} onAdd={addBill} onDelete={deleteBill} onPay={payBill} onUndo={undoPay} />}
             {tab === "goals" && <GoalsView goals={goals} onAdd={addGoal} onDelete={deleteGoal} onContribute={contribute} />}
             {tab === "history" && <HistoryView transactions={transactions} onDelete={deleteTx} />}
-            {tab === "settings" && <SettingsView settings={settings} onUpdate={updateSettings} onErase={eraseAll} onSignOut={signOut} />}
+            {tab === "settings" && <SettingsView settings={settings} onUpdate={updateSettings} onErase={eraseAll} />}
           </div>
 
           {tab !== "add" && (
