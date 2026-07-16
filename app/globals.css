@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap');
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; padding: 0; background: #DCD6CB; }
+input::placeholder { color: #8C887E; }
+button { font: inherit; transition: transform .12s ease, box-shadow .12s ease, background-color .15s ease, color .15s ease; }
+button:active { transform: scale(0.97); }
+
+.page-transition { animation: pageIn .32s cubic-bezier(.16,1,.3,1) both; }
+.fade-up { animation: fadeUp .5s ease both; }
+.sheet-up { animation: sheetUp .28s cubic-bezier(.2,.8,.2,1) both; }
+.pop { animation: pop .2s ease both; }
+.keycap:active { background:#EFEBE3; transform: scale(0.97); }
+
+@keyframes pageIn { from { opacity:0; transform: translateY(6px);} to {opacity:1; transform:none;} }
+@keyframes fadeUp { from { opacity:0; transform: translateY(10px);} to {opacity:1; transform:none;} }
+@keyframes sheetUp { from { transform: translateY(100%);} to { transform:none;} }
+@keyframes pop { from { opacity:0; transform: scale(.94);} to {opacity:1; transform:none;} }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}

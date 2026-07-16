@@ -1,0 +1,13 @@
+{
+  "name": "Magic Touch Finances",
+  "short_name": "Magic Touch",
+  "description": "Income, expenses, bills, and savings for Magic Touch.",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#EFEBE3",
+  "theme_color": "#1F4E3D",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
