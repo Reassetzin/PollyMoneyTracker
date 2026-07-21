@@ -1,11 +1,16 @@
 "use client";
 import React, { useState } from "react";
-import { X, ArrowUpRight, ArrowDownLeft, Delete } from "lucide-react";
+import { X, ArrowUpRight, ArrowDownLeft, Delete, Plus } from "lucide-react";
 import { IN_CATS, OUT_CATS, METHODS } from "@/lib/i18n";
-import { Transaction } from "@/lib/types";
-import { useUI, C, DISPLAY, SANS, scroll, segWrap, segBtn, chip, keyStyle, input, primaryBtn, iconGhost } from "./ui";
+import { Transaction, Category } from "@/lib/types";
+import { useUI, C, DISPLAY, SANS, scroll, segWrap, segBtn, chip, keyStyle, input, primaryBtn, iconGhost, Sheet, Field } from "./ui";
 
-export default function AddView({ onSave, onCancel }: { onSave: (tx: Omit<Transaction, "id">) => void; onCancel: () => void }) {
+export default function AddView({ categories, onAddCategory, onSave, onCancel }: {
+  categories: Category[];
+  onAddCategory: (type: "in" | "out", label: string) => Promise<Category | null>;
+  onSave: (tx: Omit<Transaction, "id">) => void;
+  onCancel: () => void;
+}) {
   const { L, cur } = useUI();
   const [type, setType] = useState<"in" | "out">("out");
   const [amount, setAmount] = useState("0");
@@ -13,7 +18,12 @@ export default function AddView({ onSave, onCancel }: { onSave: (tx: Omit<Transa
   const [scope, setScope] = useState<"business" | "personal">("business");
   const [method, setMethod] = useState<Transaction["method"] | "">("");
   const [note, setNote] = useState("");
-  const cats = type === "in" ? IN_CATS : OUT_CATS;
+  const [addingCat, setAddingCat] = useState(false);
+  const [newCatName, setNewCatName] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  const builtIn = type === "in" ? IN_CATS : OUT_CATS;
+  const custom = categories.filter((c) => c.type === type);
 
   function press(k: string) {
     setAmount((a) => {
@@ -29,6 +39,16 @@ export default function AddView({ onSave, onCancel }: { onSave: (tx: Omit<Transa
   function save() {
     if (!method) return;
     onSave({ type, amount: num, category: cat, scope, method, note: note.trim(), bill_id: null, occurred_at: new Date().toISOString() });
+  }
+  async function saveNewCategory() {
+    const name = newCatName.trim();
+    if (!name) return;
+    setSaving(true);
+    const created = await onAddCategory(type, name);
+    setSaving(false);
+    setAddingCat(false);
+    setNewCatName("");
+    if (created) setCat(created.label);
   }
 
   return (
@@ -51,7 +71,14 @@ export default function AddView({ onSave, onCancel }: { onSave: (tx: Omit<Transa
       </div>
 
       <div style={{ padding: "0 16px", display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center" }}>
-        {cats.map((c) => <button key={c} onClick={() => setCat(c)} style={chip(cat === c)}>{L.cats[c]}</button>)}
+        {builtIn.map((c) => <button key={c} onClick={() => setCat(c)} style={chip(cat === c)}>{L.cats[c]}</button>)}
+        {custom.map((c) => <button key={c.id} onClick={() => setCat(c.label)} style={chip(cat === c.label)}>{c.label}</button>)}
+        <button
+          onClick={() => setAddingCat(true)}
+          style={{ ...chip(false), display: "flex", alignItems: "center", gap: 4, borderStyle: "dashed", color: C.pine }}
+        >
+          <Plus size={13} /> {L.addCategory}
+        </button>
       </div>
 
       <div style={{ padding: "16px 16px 0" }}>
@@ -86,6 +113,25 @@ export default function AddView({ onSave, onCancel }: { onSave: (tx: Omit<Transa
           {type === "in" ? L.saveIn : L.saveOut}
         </button>
       </div>
+
+      {addingCat && (
+        <Sheet onClose={() => setAddingCat(false)} title={L.newCategory}>
+          <Field label={L.categoryName}>
+            <input
+              style={input} autoFocus value={newCatName} placeholder={L.categoryNamePh}
+              onChange={(e) => setNewCatName(e.target.value)}
+              onKeyDown={(e) => { if (e.key === "Enter") saveNewCategory(); }}
+            />
+          </Field>
+          <button
+            disabled={!newCatName.trim() || saving}
+            onClick={saveNewCategory}
+            style={{ ...primaryBtn, opacity: newCatName.trim() && !saving ? 1 : 0.4 }}
+          >
+            {L.saveCategory}
+          </button>
+        </Sheet>
+      )}
     </div>
   );
 }

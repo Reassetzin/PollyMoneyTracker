@@ -3,7 +3,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { Home, Plus, CalendarDays, Clock, BarChart3 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { STR } from "@/lib/i18n";
-import { Settings, Transaction, Bill, Goal } from "@/lib/types";
+import { Settings, Transaction, Bill, Goal, Category } from "@/lib/types";
 import { Ctx, C, SANS, money, monthKey, uid } from "./ui";
 import HomeView from "./HomeView";
 import ReportsView from "./ReportsView";
@@ -23,19 +23,22 @@ export default function App() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [bills, setBills] = useState<Bill[]>([]);
   const [goals, setGoals] = useState<Goal[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
     (async () => {
-      const [s, t, b, g] = await Promise.all([
+      const [s, t, b, g, c] = await Promise.all([
         supabase.from("settings").select("*").eq("id", 1).single(),
         supabase.from("transactions").select("*").order("occurred_at", { ascending: false }),
         supabase.from("bills").select("*").order("due_day", { ascending: true }),
         supabase.from("goals").select("*").order("created_at", { ascending: true }),
+        supabase.from("categories").select("*").order("created_at", { ascending: true }),
       ]);
       if (s.data) setSettings(s.data as Settings);
       if (t.data) setTransactions(t.data as Transaction[]);
       if (b.data) setBills(b.data as Bill[]);
       if (g.data) setGoals(g.data as Goal[]);
+      if (c.data) setCategories(c.data as Category[]);
       setReady(true);
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -63,6 +66,11 @@ export default function App() {
   }, [transactions, settings]);
 
   /* ---------------- Mutations ---------------- */
+  async function addCategory(type: "in" | "out", label: string) {
+    const { data, error } = await supabase.from("categories").insert({ type, label }).select().single();
+    if (!error && data) setCategories((prev) => [...prev, data as Category]);
+    return data as Category | null;
+  }
   async function addTx(tx: Omit<Transaction, "id">) {
     const { data, error } = await supabase.from("transactions").insert(tx).select().single();
     if (!error && data) setTransactions((prev) => [data as Transaction, ...prev]);
@@ -147,7 +155,7 @@ export default function App() {
           <div key={tab} className="page-transition">
             {tab === "home" && <HomeView totals={totals} bills={bills} transactions={transactions} goals={goals} businessName={settings.business_name} go={setTab} />}
             {tab === "reports" && <ReportsView totals={totals} transactions={transactions} />}
-            {tab === "add" && <AddView onSave={(tx) => { addTx(tx); setTab("home"); }} onCancel={() => setTab("home")} />}
+            {tab === "add" && <AddView categories={categories} onAddCategory={addCategory} onSave={(tx) => { addTx(tx); setTab("home"); }} onCancel={() => setTab("home")} />}
             {tab === "bills" && <BillsView bills={bills} onAdd={addBill} onDelete={deleteBill} onPay={payBill} onUndo={undoPay} />}
             {tab === "goals" && <GoalsView goals={goals} onAdd={addGoal} onDelete={deleteGoal} onContribute={contribute} />}
             {tab === "history" && <HistoryView transactions={transactions} onDelete={deleteTx} />}

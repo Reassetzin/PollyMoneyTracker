@@ -50,6 +50,13 @@ create table if not exists transactions (
   created_at timestamptz not null default now()
 );
 
+create table if not exists categories (
+  id uuid primary key default gen_random_uuid(),
+  type text not null check (type in ('in','out')),
+  label text not null,
+  created_at timestamptz not null default now()
+);
+
 create index if not exists idx_transactions_occurred_at on transactions (occurred_at desc);
 
 -- RLS stays on, but policies allow the app's public (anon) key to read/write
@@ -76,3 +83,8 @@ create policy "public read transactions" on transactions for select using (true)
 create policy "public write transactions" on transactions for insert with check (true);
 create policy "public update transactions" on transactions for update using (true);
 create policy "public delete transactions" on transactions for delete using (true);
+
+alter table categories enable row level security;
+create policy "public read categories" on categories for select using (true);
+create policy "public write categories" on categories for insert with check (true);
+create policy "public delete categories" on categories for delete using (true);

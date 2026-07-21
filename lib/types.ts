@@ -1,3 +1,9 @@
+export type Category = {
+  id: string;
+  type: "in" | "out";
+  label: string;
+};
+
 export type Settings = {
   business_name: string;
   starting_balance: number;

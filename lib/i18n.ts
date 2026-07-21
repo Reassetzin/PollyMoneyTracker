@@ -1,5 +1,5 @@
-export const IN_CATS = ["magic_touch", "deposit", "refund", "other_in"] as const;
-export const OUT_CATS = ["materials", "fuel", "tools", "payroll", "rent", "utilities",
+export const IN_CATS = ["magic_touch", "mario", "deposit", "refund", "other_in"] as const;
+export const OUT_CATS = ["mario", "materials", "fuel", "tools", "payroll", "rent", "utilities",
   "subscriptions", "insurance", "supplies", "food", "other_out"] as const;
 export const METHODS = ["card", "cash", "venmo", "zelle"] as const;
 
@@ -25,6 +25,8 @@ export const STR = {
     addMoney: "Add money", moneyOut: "Money out", moneyIn: "Money in",
     howReceived: "How was it received?", howPaid: "How was it paid?",
     noteOptional: "Add a note (optional)", saveIn: "Save money in", saveOut: "Save money out",
+    addCategory: "Add category", newCategory: "New category", categoryNamePh: "e.g. Mario, Landlord, Client name",
+    categoryName: "Category name", saveCategory: "Save category",
     bills: "Bills", billsSub: (x: string) => `${x} in monthly bills`, addBill: "Add a bill",
     billsEmpty: "Add recurring bills like rent, insurance or subscriptions to see them here.",
     pay: "Pay", paidUndo: "Paid · Undo", markPaidTitle: "Mark this bill as paid?",
@@ -48,7 +50,7 @@ export const STR = {
     deleteGoal: "Delete this goal?", deleteGoalMsg: "The money you set aside won't be deleted from your account.",
     delete: "Delete", signOut: "Sign out",
     cats: {
-      magic_touch: "Magic Touch", deposit: "Deposit", refund: "Refund", other_in: "Other",
+      magic_touch: "Magic Touch", mario: "Mario", deposit: "Deposit", refund: "Refund", other_in: "Other",
       materials: "Materials", fuel: "Fuel / Gas", tools: "Tools & Equipment", payroll: "Payroll",
       rent: "Rent", utilities: "Utilities", subscriptions: "Subscriptions", insurance: "Insurance",
       supplies: "Supplies", food: "Food", other_out: "Other",
@@ -76,6 +78,8 @@ export const STR = {
     addMoney: "Adicionar dinheiro", moneyOut: "Saída", moneyIn: "Entrada",
     howReceived: "Como foi recebido?", howPaid: "Como foi pago?",
     noteOptional: "Adicionar uma nota (opcional)", saveIn: "Salvar entrada", saveOut: "Salvar saída",
+    addCategory: "Adicionar categoria", newCategory: "Nova categoria", categoryNamePh: "ex: Mario, Proprietário, Nome do cliente",
+    categoryName: "Nome da categoria", saveCategory: "Salvar categoria",
     bills: "Contas", billsSub: (x: string) => `${x} em contas mensais`, addBill: "Adicionar conta",
     billsEmpty: "Adicione contas recorrentes como aluguel, seguro ou assinaturas para vê-las aqui.",
     pay: "Pagar", paidUndo: "Paga · Desfazer", markPaidTitle: "Marcar esta conta como paga?",
@@ -99,7 +103,7 @@ export const STR = {
     deleteGoal: "Excluir esta meta?", deleteGoalMsg: "O dinheiro reservado não será apagado da sua conta.",
     delete: "Excluir", signOut: "Sair",
     cats: {
-      magic_touch: "Magic Touch", deposit: "Depósito", refund: "Reembolso", other_in: "Outro",
+      magic_touch: "Magic Touch", mario: "Mario", deposit: "Depósito", refund: "Reembolso", other_in: "Outro",
       materials: "Materiais", fuel: "Combustível", tools: "Ferramentas e Equipamentos", payroll: "Salários",
       rent: "Aluguel", utilities: "Contas de consumo", subscriptions: "Assinaturas", insurance: "Seguro",
       supplies: "Suprimentos", food: "Alimentação", other_out: "Outro",
