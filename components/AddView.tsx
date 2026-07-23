@@ -96,8 +96,10 @@ export default function AddView({ categories, onAddCategory, onSave, onCancel }:
           <button onClick={() => setScope("personal")} style={segBtn(scope === "personal", C.pine)}>{L.personal}</button>
         </div>
       </div>
-      <div style={{ padding: "10px 20px 0" }}>
-        <input value={note} onChange={(e) => setNote(e.target.value)} placeholder={L.noteOptional} style={input} />
+      <div style={{ padding: "14px 20px 0" }}>
+        <Field label={L.noteOptional}>
+          <input value={note} onChange={(e) => setNote(e.target.value)} placeholder={L.descriptionPh} style={input} />
+        </Field>
       </div>
 
       <div style={{ padding: "16px 18px 0", display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
